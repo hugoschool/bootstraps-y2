@@ -25,12 +25,14 @@ void nts::AComponent::setLink(std::size_t pin, nts::IComponent &other, std::size
     _pins.insert({pin, pair});
 }
 
-nts::IComponent *nts::AComponent::getLink(std::size_t pin)
+nts::Tristate nts::AComponent::getLink(std::size_t pin)
 {
     try {
-        nts::IComponent &component = _pins.at(pin).first;
-        return &component;
+        std::pair<nts::IComponent &, std::size_t> pair = _pins.at(pin);
+        nts::IComponent &component = pair.first;
+
+        return component.compute(pair.second);
     } catch (const std::out_of_range &) {
-        return nullptr;
+        return nts::Undefined;
     }
 }

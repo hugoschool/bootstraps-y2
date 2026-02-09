@@ -2,6 +2,10 @@ CXX	:=	clang++
 CXXFLAGS	:=	-Wall -Wextra -std=c++20
 
 SRC	:=	AComponent.cpp \
+		AndComponent.cpp \
+		FalseComponent.cpp \
+		NotComponent.cpp \
+		TrueComponent.cpp \
 		main.cpp
 OBJ	:=	$(SRC:.cpp=.o)
 
@@ -10,7 +14,7 @@ BINARY	:=	nts
 all:	$(BINARY)
 
 $(BINARY):	$(OBJ)
-	$(CXX) -o $(BINARY)
+	$(CXX) -o $(BINARY) $(OBJ)
 
 clean:
 	$(RM) $(OBJ)
