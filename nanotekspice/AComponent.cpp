@@ -21,8 +21,7 @@ void nts::AComponent::setLink(std::size_t pin, nts::IComponent &other, std::size
 {
     std::pair<nts::IComponent &, std::size_t> pair = std::make_pair(std::ref(other), otherPin);
 
-    // TODO: replace if already inserted
-    _pins.insert({pin, pair});
+    _pins.insert_or_assign(pin, pair);
 }
 
 nts::Tristate nts::AComponent::getLink(std::size_t pin)
