@@ -1,14 +1,9 @@
 #pragma once
 
+#include "Tristate.hpp"
 #include <cstdint>
 
 namespace nts {
-    enum Tristate {
-        Undefined = (-true),
-        True = true,
-        False = false
-    };
-
     class IComponent {
         public:
             virtual ~IComponent() = default;
