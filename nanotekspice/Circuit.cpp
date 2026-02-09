@@ -50,12 +50,9 @@ void nts::Circuit::display()
     // TODO: unsure about all of this
     std::cout << "input(s):" << std::endl;
     for (std::pair<const std::string, std::unique_ptr<nts::IComponent>> &pair : _components) {
-        // if (dynamic_cast<InputComponent *>(pair.second.get())
-        //     || dynamic_cast<ClockComponent *>(pair.second.get())) {
-            // std::cout << "\t" << pair.first << ":" << pair.second->compute(1) << std::endl;
-            // }
-        if (dynamic_cast<ClockComponent *>(pair.second.get())) {
-            std::cout << "  " << pair.first << ": " << pair.second->compute(1) << std::endl;
+        if (dynamic_cast<InputComponent *>(pair.second.get())
+            || dynamic_cast<ClockComponent *>(pair.second.get())) {
+            std::cout << "\t" << pair.first << ":" << pair.second->compute(1) << std::endl;
         }
     }
 
