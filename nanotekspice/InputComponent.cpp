@@ -17,5 +17,10 @@ void nts::InputComponent::store(nts::Tristate state)
 
 nts::Tristate nts::InputComponent::compute(std::size_t pin)
 {
-    return _state;
+    switch (pin) {
+        case 1:
+            return _state;
+        default:
+            return nts::Undefined;
+    }
 }

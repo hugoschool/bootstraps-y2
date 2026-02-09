@@ -27,5 +27,10 @@ void nts::ClockComponent::simulate(std::size_t tick)
 
 nts::Tristate nts::ClockComponent::compute(std::size_t pin)
 {
-    return _state;
+    switch (pin) {
+        case 1:
+            return _state;
+        default:
+            return nts::Undefined;
+    }
 }
