@@ -1,6 +1,5 @@
 #include "OrComponent.hpp"
 #include "AComponent.hpp"
-#include "IComponent.hpp"
 
 nts::OrComponent::OrComponent() : AComponent()
 {

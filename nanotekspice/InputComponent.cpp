@@ -1,6 +1,5 @@
 #include "InputComponent.hpp"
 #include "AComponent.hpp"
-#include "IComponent.hpp"
 
 nts::InputComponent::InputComponent() : AComponent(), _state(nts::Undefined)
 {

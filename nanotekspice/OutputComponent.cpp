@@ -1,6 +1,5 @@
 #include "OutputComponent.hpp"
 #include "AComponent.hpp"
-#include "IComponent.hpp"
 
 nts::OutputComponent::OutputComponent() : AComponent()
 {

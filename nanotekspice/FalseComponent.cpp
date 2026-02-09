@@ -1,6 +1,5 @@
 #include "FalseComponent.hpp"
 #include "AComponent.hpp"
-#include "IComponent.hpp"
 #include "Tristate.hpp"
 
 nts::FalseComponent::FalseComponent() : AComponent()

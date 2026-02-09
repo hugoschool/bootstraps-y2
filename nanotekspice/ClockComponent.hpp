@@ -1,7 +1,6 @@
 #pragma once
 
 #include "AComponent.hpp"
-#include "IComponent.hpp"
 #include <optional>
 
 namespace nts {

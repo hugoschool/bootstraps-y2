@@ -1,6 +1,5 @@
 #include "AndComponent.hpp"
 #include "AComponent.hpp"
-#include "IComponent.hpp"
 
 nts::AndComponent::AndComponent() : AComponent()
 {

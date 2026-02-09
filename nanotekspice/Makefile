@@ -15,6 +15,7 @@ BINARY	:=	nts
 CIRCUIT_SRC	:=	AComponent.cpp \
 				OutputComponent.cpp \
 				ClockComponent.cpp \
+				InputComponent.cpp \
 				Circuit.cpp \
 				Tristate.cpp \
 				main_circuit.cpp

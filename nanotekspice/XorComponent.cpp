@@ -1,6 +1,5 @@
 #include "XorComponent.hpp"
 #include "AComponent.hpp"
-#include "IComponent.hpp"
 
 nts::XorComponent::XorComponent() : AComponent()
 {

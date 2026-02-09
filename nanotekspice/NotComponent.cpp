@@ -1,7 +1,5 @@
 #include "NotComponent.hpp"
 #include "AComponent.hpp"
-#include "IComponent.hpp"
-#include <stdexcept>
 
 nts::NotComponent::NotComponent() : AComponent()
 {

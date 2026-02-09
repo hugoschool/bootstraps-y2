@@ -1,6 +1,5 @@
 #include "ClockComponent.hpp"
 #include "AComponent.hpp"
-#include "IComponent.hpp"
 #include "Tristate.hpp"
 #include <optional>
 
