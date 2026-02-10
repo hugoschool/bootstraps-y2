@@ -1,5 +1,4 @@
 #include "Circuit.hpp"
-#include "AComponent.hpp"
 #include "ClockComponent.hpp"
 #include "IComponent.hpp"
 #include "InputComponent.hpp"
@@ -9,7 +8,7 @@
 #include <memory>
 #include <unordered_map>
 
-nts::Circuit::Circuit() : AComponent(), _components(), _tick(0)
+nts::Circuit::Circuit() : IComponent(), _components(), _tick(0)
 {
 }
 
@@ -52,7 +51,7 @@ void nts::Circuit::display()
     for (std::pair<const std::string, std::unique_ptr<nts::IComponent>> &pair : _components) {
         if (dynamic_cast<InputComponent *>(pair.second.get())
             || dynamic_cast<ClockComponent *>(pair.second.get())) {
-            std::cout << "\t" << pair.first << ":" << pair.second->compute(1) << std::endl;
+            std::cout << "  " << pair.first << ": " << pair.second->compute(1) << std::endl;
         }
     }
 
@@ -68,4 +67,11 @@ nts::Tristate nts::Circuit::compute(std::size_t pin)
 {
     static_cast<void>(pin);
     return nts::Undefined;
+}
+
+void nts::Circuit::setLink(std::size_t pin, nts::IComponent &other, std::size_t otherPin)
+{
+    static_cast<void>(pin);
+    static_cast<void>(other);
+    static_cast<void>(otherPin);
 }
