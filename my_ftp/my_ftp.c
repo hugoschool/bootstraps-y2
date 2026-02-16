@@ -19,6 +19,12 @@ int main(int argc, char **argv)
         return 84;
     }
 
+    const int enable = 1;
+    if (setsockopt(socket_fd, SOL_SOCKET, SO_REUSEADDR, &enable, sizeof(int)) < 0) {
+        perror("setsockopt");
+        return 84;
+    }
+
     struct sockaddr_in server_addr;
     server_addr.sin_family = AF_INET;
     server_addr.sin_port = htons(atoi(argv[1]));
