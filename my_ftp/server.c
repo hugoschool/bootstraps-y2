@@ -6,6 +6,19 @@
 #include <arpa/inet.h>
 #include <unistd.h>
 #include <string.h>
+#include <stdbool.h>
+
+bool child_process(int accepted_fd, const struct sockaddr_in addr)
+{
+    printf("Connection from %s:%d\n", inet_ntoa(addr.sin_addr), ntohs(addr.sin_port));
+
+    sleep(2);
+
+    const char *str = "I lost the game :3\n";
+    write(accepted_fd, str, strlen(str));
+
+    return true;
+}
 
 int main(int argc, char **argv)
 {
@@ -44,19 +57,26 @@ int main(int argc, char **argv)
     struct sockaddr_in client_addr;
     socklen_t client_addr_len = sizeof(client_addr);
 
-    int accepted_fd = accept(socket_fd, (struct sockaddr *) &client_addr, &client_addr_len);
+    while (true) {
+        memset(&client_addr, 0, client_addr_len);
+        int accepted_fd = accept(socket_fd, (struct sockaddr *) &client_addr, &client_addr_len);
 
-    if (accepted_fd < 0) {
-        perror("accept");
-        return 84;
-    }
+        if (accepted_fd < 0) {
+            perror("accept");
+            return false;
+        }
 
-    printf("Connection from %s:%d\n", inet_ntoa(client_addr.sin_addr), ntohs(client_addr.sin_port));
+        pid_t pid = fork();
 
-    const char *str = "I lost the game :3\n";
-    write(accepted_fd, str, strlen(str));
+        if (pid == 0) {
+            if (!child_process(accepted_fd, client_addr)) {
+                return 84;
+            }
+        } else {
+            close(accepted_fd);
+        }
+    };
 
-    close(accepted_fd);
     close(socket_fd);
 
     return 0;
