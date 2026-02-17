@@ -1,5 +1,5 @@
 CC	?=	clang
-CFLAGS	:=	-Wall -Wextra -std=c17
+CFLAGS	:=	-Wall -Wextra -std=c17 -g3
 
 SERVER_SRC	:=	server.c
 SERVER_OBJ	:=	$(SERVER_SRC:.c=.o)
