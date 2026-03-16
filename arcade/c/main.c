@@ -1,24 +1,25 @@
 #include <dlfcn.h>
 
+#define LIBRARY_AMOUNT 3
+
+typedef void *(*fptr)();
+
 int main(void)
 {
-    typedef void *(*fptr)();
+    char *libNames[LIBRARY_AMOUNT] = {
+        "./libfoo.so",
+        "./libbar.so",
+        "./libgra.so",
+    };
+    void *handles[LIBRARY_AMOUNT] = {0};
 
-    void *foo = dlopen("./libfoo.so", RTLD_NOW);
-    void *bar = dlopen("./libbar.so", RTLD_NOW);
-    void *gra = dlopen("./libgra.so", RTLD_NOW);
-
-    fptr fooEntryPoint = (fptr)dlsym(foo, "myEntryPoint");
-    (*fooEntryPoint)();
-
-    fptr barEntryPoint = (fptr)dlsym(bar, "myEntryPoint");
-    (*barEntryPoint)();
-
-    fptr graEntryPoint = (fptr)dlsym(gra, "myEntryPoint");
-    (*graEntryPoint)();
-
-    dlclose(foo);
-    dlclose(bar);
-    dlclose(gra);
+    for (size_t i = 0; i < LIBRARY_AMOUNT; i++)
+        handles[i] = dlopen(libNames[i], RTLD_NOW);
+    for (size_t i = 0; i < LIBRARY_AMOUNT; i++) {
+        fptr entrypoint = (fptr)dlsym(handles[i], "myEntryPoint");
+        (*entrypoint)();
+    }
+    for (size_t i = 0; i < LIBRARY_AMOUNT; i++)
+        dlclose(handles[i]);
     return 0;
 }
