@@ -28,7 +28,7 @@ class DLLoader {
             if (_handle == nullptr)
                 openHandle();
 
-            T *(*function)() = (T *(*)())dlsym(_handle, functionName.c_str());
+            T *(*function)() = reinterpret_cast<T *(*)()>(dlsym(_handle, functionName.c_str()));
             // TODO: return error if function is null
             T *instance = (*function)();
             // TODO: return error if instance is null
