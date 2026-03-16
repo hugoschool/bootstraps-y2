@@ -12,23 +12,20 @@ int main(void)
     DLLoader<Bar> barLoader("./libbar.so");
     DLLoader<Gra> graLoader("./libgra.so");
 
-    Foo *foo = fooLoader.getInstance();
+    std::unique_ptr<Foo> foo = fooLoader.getInstance();
     foo->init();
     std::cout << "Name: " << foo->getName() << std::endl;
     foo->stop();
 
-    Bar *bar = barLoader.getInstance();
+    std::unique_ptr<Bar> bar = barLoader.getInstance();
     bar->init();
     std::cout << "Name: " << bar->getName() << std::endl;
     bar->stop();
 
-    Gra *gra = graLoader.getInstance();
+    std::unique_ptr<Gra> gra = graLoader.getInstance();
     gra->init();
     std::cout << "Name: " << gra->getName() << std::endl;
     gra->stop();
 
-    delete foo;
-    delete bar;
-    delete gra;
     return 0;
 }

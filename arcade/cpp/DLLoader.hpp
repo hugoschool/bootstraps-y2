@@ -1,6 +1,7 @@
 #pragma once
 
 #include <dlfcn.h>
+#include <memory>
 #include <string>
 
 template <typename T>
@@ -22,7 +23,7 @@ class DLLoader {
             return _handle;
         }
 
-        T *getInstance(const std::string functionName = "entrypoint")
+        std::unique_ptr<T> getInstance(const std::string functionName = "entrypoint")
         {
             if (_handle == nullptr)
                 openHandle();
@@ -31,7 +32,7 @@ class DLLoader {
             // TODO: return error if function is null
             T *instance = (*function)();
             // TODO: return error if instance is null
-            return instance;
+            return std::unique_ptr<T>(instance);
         };
 
         void closeHandle()
