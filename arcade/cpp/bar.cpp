@@ -1,18 +1,34 @@
-#include <stdio.h>
+#include "bar.hpp"
+#include <iostream>
 
-#define LIB_NAME "bar"
-
-__attribute__((constructor)) void constructor(void)
+Bar::Bar::Bar() : _name("bar")
 {
-    printf("[lib%s] Loading %s library...\n", LIB_NAME, LIB_NAME);
+    std::cout << "[lib" << _name << "] Loading " << _name << " library..." << std::endl;
 }
 
-__attribute__((destructor)) void destructor(void)
+Bar::Bar::~Bar()
 {
-    printf("[lib%s] Closing %s...\n", LIB_NAME, LIB_NAME);
+    std::cout << "[lib" << _name << "] " << _name << " closing..." << std::endl;
 }
 
-extern "C" void myEntryPoint(void)
+void Bar::init()
 {
-    printf("[lib%s] Entry point for %s!\n", LIB_NAME, LIB_NAME);
+    std::cout << "[lib" << _name << "] was initialized..." << std::endl;
+}
+
+void Bar::stop()
+{
+    std::cout << "[lib" << _name << "] was stopped..." << std::endl;
+}
+
+const std::string &Bar::getName() const
+{
+    return _name;
+}
+
+extern "C" {
+    IDisplayModule *entrypoint()
+    {
+        return new Bar;
+    }
 }

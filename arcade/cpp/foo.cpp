@@ -1,18 +1,34 @@
-#include <stdio.h>
+#include "foo.hpp"
+#include <iostream>
 
-#define LIB_NAME "foo"
-
-__attribute__((constructor)) void constructor(void)
+Foo::Foo::Foo() : _name("foo")
 {
-    printf("[lib%s] Loading %s library...\n", LIB_NAME, LIB_NAME);
+    std::cout << "[lib" << _name << "] Loading " << _name << " library..." << std::endl;
 }
 
-__attribute__((destructor)) void destructor(void)
+Foo::Foo::~Foo()
 {
-    printf("[lib%s] %s closing...\n", LIB_NAME, LIB_NAME);
+    std::cout << "[lib" << _name << "] " << _name << " closing..." << std::endl;
 }
 
-extern "C" void myEntryPoint(void)
+void Foo::init()
 {
-    printf("[lib%s] Entry point for %s!\n", LIB_NAME, LIB_NAME);
+    std::cout << "[lib" << _name << "] was initialized..." << std::endl;
+}
+
+void Foo::stop()
+{
+    std::cout << "[lib" << _name << "] was stopped..." << std::endl;
+}
+
+const std::string &Foo::getName() const
+{
+    return _name;
+}
+
+extern "C" {
+    IDisplayModule *entrypoint()
+    {
+        return new Foo;
+    }
 }

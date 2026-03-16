@@ -1,18 +1,34 @@
-#include <stdio.h>
+#include "gra.hpp"
+#include <iostream>
 
-#define LIB_NAME "gra"
-
-__attribute__((constructor)) void constructor(void)
+Gra::Gra::Gra() : _name("gra")
 {
-    printf("[lib%s] Loading %s library...\n", LIB_NAME, LIB_NAME);
+    std::cout << "[lib" << _name << "] Loading " << _name << " library..." << std::endl;
 }
 
-__attribute__((destructor)) void destructor(void)
+Gra::Gra::~Gra()
 {
-    printf("[lib%s] %s's getting out...\n", LIB_NAME, "Gra");
+    std::cout << "[lib" << _name << "] " << _name << " closing..." << std::endl;
 }
 
-extern "C" void myEntryPoint(void)
+void Gra::init()
 {
-    printf("[lib%s] Another entry point!\n", LIB_NAME);
+    std::cout << "[lib" << _name << "] was initialized..." << std::endl;
+}
+
+void Gra::stop()
+{
+    std::cout << "[lib" << _name << "] was stopped..." << std::endl;
+}
+
+const std::string &Gra::getName() const
+{
+    return _name;
+}
+
+extern "C" {
+    IDisplayModule *entrypoint()
+    {
+        return new Gra;
+    }
 }
