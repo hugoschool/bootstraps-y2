@@ -1,6 +1,7 @@
 # Binaries
 *.a
 *.o
+*.so
 *.out
 
 # Cache
