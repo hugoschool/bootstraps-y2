@@ -1,30 +1,28 @@
 #include "foo.hpp"
 #include "bar.hpp"
 #include "gra.hpp"
+#include "DLLoader.hpp"
 #include <dlfcn.h>
 #include <iostream>
 
 int main(void)
 {
     // UGLY but idc
-    void *fooHandle = dlopen("./libfoo.so", RTLD_LAZY);
-    void *barHandle = dlopen("./libbar.so", RTLD_LAZY);
-    void *graHandle = dlopen("./libgra.so", RTLD_LAZY);
+    DLLoader<Foo> fooLoader("./libfoo.so");
+    DLLoader<Bar> barLoader("./libbar.so");
+    DLLoader<Gra> graLoader("./libgra.so");
 
-    Foo *(*fooFct)() = (Foo *(*)())dlsym(fooHandle, "entrypoint");
-    Foo *foo = (*fooFct)();
+    Foo *foo = fooLoader.getInstance();
     foo->init();
     std::cout << "Name: " << foo->getName() << std::endl;
     foo->stop();
 
-    Bar *(*barFct)() = (Bar *(*)())dlsym(barHandle, "entrypoint");
-    Bar *bar = (*barFct)();
+    Bar *bar = barLoader.getInstance();
     bar->init();
     std::cout << "Name: " << bar->getName() << std::endl;
     bar->stop();
 
-    Gra *(*graFct)() = (Gra *(*)())dlsym(graHandle, "entrypoint");
-    Gra *gra = (*graFct)();
+    Gra *gra = graLoader.getInstance();
     gra->init();
     std::cout << "Name: " << gra->getName() << std::endl;
     gra->stop();
@@ -32,9 +30,5 @@ int main(void)
     delete foo;
     delete bar;
     delete gra;
-
-    dlclose(fooHandle);
-    dlclose(barHandle);
-    dlclose(graHandle);
     return 0;
 }
