@@ -1,6 +1,7 @@
 services:
   jenkins:
-    image: jenkins/jenkins:lts
+    build:
+      context: .
 
     environment:
       - CASC_JENKINS_CONFIG=/var/jenkins_home/configuration.yml
