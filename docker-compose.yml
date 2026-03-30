@@ -1,7 +1,13 @@
 services:
   jenkins:
     image: jenkins/jenkins:lts
-    # environment:
+    environment:
+      - CASC_JENKINS_CONFIG=/var/jenkins_home/configuration.yml
     #   - JAVA_OPTS=-Djenkins.install.runSetupWizard=true
+
     ports:
       - 127.0.0.1:8080:8080
+
+    volumes:
+      - ./configuration.yml:/var/jenkins_home/configuration.yml:ro
+      - ./job_dsl.groovy:/var/jenkins_home/job_dsl.groovy:ro

@@ -1,0 +1,14 @@
+jenkins:
+  systemMessage: "Hello! Welcome to my Jenkins instance :)"
+
+  securityRealm:
+    local:
+      allowsSignup: false
+      users:
+        - id: "admin"
+          password: "${JENKINS_ADMIN_PASSWORD}"
+        - id: "jigglypuff"
+          password: "${JENKINS_JIGGLYPUFF_PASSWORD}"
+
+  jobs:
+    - file: job_dsl.groovy
