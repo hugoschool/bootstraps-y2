@@ -1,9 +1,12 @@
 services:
   jenkins:
     image: jenkins/jenkins:lts
+
     environment:
       - CASC_JENKINS_CONFIG=/var/jenkins_home/configuration.yml
-    #   - JAVA_OPTS=-Djenkins.install.runSetupWizard=true
+      - JAVA_OPTS=-Djenkins.install.runSetupWizard=false
+
+    env_file: ".env"
 
     ports:
       - 127.0.0.1:8080:8080

@@ -10,5 +10,5 @@ jenkins:
         - id: "jigglypuff"
           password: "${JENKINS_JIGGLYPUFF_PASSWORD}"
 
-  jobs:
-    - file: job_dsl.groovy
+jobs:
+  - file: /var/jenkins_home/job_dsl.groovy
