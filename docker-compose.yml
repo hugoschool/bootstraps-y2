@@ -1,0 +1,7 @@
+services:
+  jenkins:
+    image: jenkins/jenkins:lts
+    # environment:
+    #   - JAVA_OPTS=-Djenkins.install.runSetupWizard=true
+    ports:
+      - 127.0.0.1:8080:8080
