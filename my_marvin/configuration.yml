@@ -8,6 +8,7 @@ jenkins:
         - id: "admin"
           password: "${JENKINS_ADMIN_PASSWORD}"
         - id: "jigglypuff"
+          name: "Jigglypuff"
           password: "${JENKINS_JIGGLYPUFF_PASSWORD}"
 
 jobs:
