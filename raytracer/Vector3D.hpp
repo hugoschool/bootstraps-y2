@@ -14,7 +14,12 @@ namespace Math {
             double length();
             double dot(Vector3D &vector);
 
-            // TODO: +, +=, -, -=, *, *=, / and /=
-            // TODO: *, *=, / and /=
+            Vector3D operator+(const Vector3D &vector) const;
+            Vector3D operator-(const Vector3D &vector) const;
+            Vector3D operator*(const Vector3D &vector) const;
+
+            Math::Vector3D operator*(const double nb) const;
+
+            // TODO: +=, -=, *=, / and /=
     };
 }

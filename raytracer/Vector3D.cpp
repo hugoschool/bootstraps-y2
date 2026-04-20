@@ -14,3 +14,23 @@ double Math::Vector3D::dot(Vector3D &vector)
 {
     return x * vector.x + y * vector.y + z * vector.z;
 }
+
+Math::Vector3D Math::Vector3D::operator+(const Math::Vector3D &vector) const
+{
+    return Math::Vector3D(x + vector.x, y + vector.y, z + vector.z);
+}
+
+Math::Vector3D Math::Vector3D::operator-(const Math::Vector3D &vector) const
+{
+    return Math::Vector3D(x - vector.x, y - vector.y, z - vector.z);
+}
+
+Math::Vector3D Math::Vector3D::operator*(const Math::Vector3D &vector) const
+{
+    return Math::Vector3D(x * vector.x, y * vector.y, z * vector.z);
+}
+
+Math::Vector3D Math::Vector3D::operator*(const double nb) const
+{
+    return Math::Vector3D(x * nb, y * nb, z * nb);
+}

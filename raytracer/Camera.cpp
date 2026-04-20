@@ -10,7 +10,7 @@ Raytracer::Camera::Camera() : origin(0, 0, 0), screen()
 Raytracer::Ray Raytracer::Camera::ray(double u, double v)
 {
     Math::Point3D point = screen.pointAt(u, v);
-    Math::Vector3D direction(point.x - origin.x, point.y - origin.y, point.z - origin.z);
+    Math::Vector3D direction = point - origin;
 
     return Raytracer::Ray(origin, direction);
 }

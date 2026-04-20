@@ -28,10 +28,10 @@ Raytracer::Sphere::Sphere(const Math::Point3D &center, double radius) :
 //
 bool Raytracer::Sphere::hits(Raytracer::Ray &ray)
 {
-    Math::Vector3D centerOffset(center.x - ray.origin.x, center.y - ray.origin.y, center.z - ray.origin.z);
-    double a = std::pow(ray.direction.x, 2) + std::pow(ray.direction.y, 2) + std::pow(ray.direction.z, 2);
+    Math::Vector3D centerOffset = center - ray.origin;
+    double a = ray.direction.dot(ray.direction);
     double b = 2 * ray.direction.x * centerOffset.x + 2 * ray.direction.y * centerOffset.y + 2 * ray.direction.z * centerOffset.z;
-    double c = std::pow(centerOffset.x, 2) + std::pow(centerOffset.y, 2) + std::pow(centerOffset.z, 2) - std::pow(radius, 2);
+    double c = centerOffset.dot(centerOffset) - std::pow(radius, 2);
     double d = std::pow(b, 2) - 4 * a * c;
 
     return d >= 0;
