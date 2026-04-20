@@ -21,11 +21,17 @@ Raytracer::Sphere::Sphere(const Math::Point3D &center, double radius) :
 // c (the rest) = Ox^2 + Oy^2 + Oz^2 - R^2
 //
 // Remove the all references to k
+//
+// This only works for a Sphere who's origin is 0, 0, 0
+// To remedy this:
+// O = Sphere Center - Ray Origin
+//
 bool Raytracer::Sphere::hits(Raytracer::Ray &ray)
 {
-    double a = ray.direction.x + ray.direction.y + ray.direction.z;
-    double b = 2 * ray.direction.x * ray.origin.x + 2 * ray.direction.y * ray.origin.y + 2 * ray.direction.z * ray.origin.z;
-    double c = std::pow(ray.origin.x, 2) + std::pow(ray.origin.y, 2) + std::pow(ray.origin.z, 2) - std::pow(radius, 2);
+    Math::Vector3D centerOffset(center.x - ray.origin.x, center.y - ray.origin.y, center.z - ray.origin.z);
+    double a = std::pow(ray.direction.x, 2) + std::pow(ray.direction.y, 2) + std::pow(ray.direction.z, 2);
+    double b = 2 * ray.direction.x * centerOffset.x + 2 * ray.direction.y * centerOffset.y + 2 * ray.direction.z * centerOffset.z;
+    double c = std::pow(centerOffset.x, 2) + std::pow(centerOffset.y, 2) + std::pow(centerOffset.z, 2) - std::pow(radius, 2);
     double d = std::pow(b, 2) - 4 * a * c;
 
     return d >= 0;
