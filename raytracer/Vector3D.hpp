@@ -20,6 +20,10 @@ namespace Math {
 
             Math::Vector3D operator*(const double nb) const;
 
+            Math::Vector3D rotateX(double degree) const;
+            Math::Vector3D rotateY(double degree) const;
+            Math::Vector3D rotateZ(double degree) const;
+
             // TODO: +=, -=, *=, / and /=
     };
 }
