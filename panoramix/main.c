@@ -4,8 +4,10 @@
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
+#include <semaphore.h>
 
 #define NB_TRAINS 3
+#define NB_MAX 2
 #define BRIDGE_START 5
 #define BRIDGE_END 10
 #define RAILWAY "=====|----|====="
@@ -23,7 +25,7 @@ typedef struct {
 typedef struct {
     trains_t *trains;
     size_t i;
-    pthread_mutex_t *mutex;
+    sem_t *sem;
 } train_thread_t;
 
 // #====|----|=====\n
@@ -75,11 +77,11 @@ void *train_routine(void *arg)
 
     while (thread->trains->trains[thread->i].i != RAILWAY_LEN - 1) {
         if (thread->trains->trains[thread->i].i == BRIDGE_START - 1) {
-            pthread_mutex_lock(thread->mutex);
+            sem_wait(thread->sem);
         }
         thread->trains->trains[thread->i].i += 1;
         if (thread->trains->trains[thread->i].i == BRIDGE_END + 1) {
-            pthread_mutex_unlock(thread->mutex);
+            sem_post(thread->sem);
         }
         usleep(USLEEP_SECS);
     }
@@ -91,15 +93,16 @@ int main(void)
 {
     trains_t trains = {0};
     pthread_t threads[NB_TRAINS];
-    pthread_mutex_t mutex;
+    sem_t *sem;
 
-    pthread_mutex_init(&mutex, NULL);
+    sem = malloc(sizeof(sem_t));
+    sem_init(sem, 0, NB_MAX);
 
     train_thread_t *train = calloc(NB_TRAINS, sizeof(train_thread_t));
     for (int i = 0; i < NB_TRAINS; i++) {
         train[i].trains = &trains;
         train[i].i = i;
-        train[i].mutex = &mutex;
+        train[i].sem = sem;
 
         pthread_create(&threads[i], NULL, &train_routine, &train[i]);
     }
@@ -111,6 +114,7 @@ int main(void)
     }
 
     free(train);
-    pthread_mutex_destroy(&mutex);
+    sem_destroy(sem);
+    free(sem);
     return 0;
 }
