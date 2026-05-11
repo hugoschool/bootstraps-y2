@@ -1,3 +1,4 @@
+#include <functional>
 #include <iostream>
 #include <memory>
 #include <pthread.h>
@@ -58,6 +59,55 @@ class ScopedLock {
         IMutex &_mutex;
 };
 
+enum class ThreadState {
+    None,
+    Running,
+    Dead
+};
+
+class IThread {
+    public:
+        virtual ~IThread() = default;
+
+        virtual void start(std::function<void *(void *)>, void *) = 0;
+        virtual void join() = 0;
+        virtual ThreadState status() = 0;
+};
+
+class Thread : public IThread {
+    public:
+        Thread() : _state(ThreadState::None)
+        {
+        }
+
+        ~Thread()
+        {
+            if (_state == ThreadState::Running)
+                join();
+        }
+
+        void start(std::function<void *(void *)> function, void *arg) override
+        {
+            pthread_create(&_thread, NULL, *function.target<void *(*)(void *)>(), arg);
+            _state = ThreadState::Running;
+        }
+
+        void join() override
+        {
+            pthread_join(_thread, NULL);
+            _state = ThreadState::Dead;
+        }
+
+        ThreadState status() override
+        {
+            return _state;
+        }
+
+    private:
+        pthread_t _thread;
+        ThreadState _state;
+};
+
 const int N = 5;
 
 void incrementCounter(int &i)
@@ -82,17 +132,17 @@ void *thread_create(void *ptr)
 int main(void)
 {
     const int T = 5;
-    pthread_t threads[T];
+    std::array<Thread, T> threads;
     struct content content = {
         .a = 0,
         .mutex = std::make_unique<Mutex>(),
     };
 
     for (unsigned int i = 0; i < T; i++) {
-        pthread_create(&(threads[i]), NULL, thread_create, &content);
+        threads[i].start(thread_create, &content);
     }
     for (unsigned int i = 0; i < T; i++) {
-        pthread_join(threads[i], NULL);
+        threads[i].join();
     }
 
     std::cout << content.a << std::endl;
