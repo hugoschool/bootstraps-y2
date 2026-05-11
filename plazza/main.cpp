@@ -1,5 +1,46 @@
 #include <iostream>
+#include <memory>
 #include <pthread.h>
+
+class IMutex {
+    public:
+        virtual ~IMutex() = default;
+        virtual void lock() = 0;
+        virtual void unlock() = 0;
+        virtual void trylock() = 0;
+};
+
+class Mutex : public IMutex {
+    public:
+        Mutex() : _mutex()
+        {
+            pthread_mutex_init(&_mutex, NULL);
+        };
+
+        ~Mutex()
+        {
+            pthread_mutex_destroy(&_mutex);
+        }
+
+        void lock() override
+        {
+            pthread_mutex_lock(&_mutex);
+        }
+
+        void unlock() override
+        {
+            pthread_mutex_unlock(&_mutex);
+        }
+
+        void trylock() override
+        {
+            int a = pthread_mutex_trylock(&_mutex);
+            static_cast<void>(a);
+        }
+
+    private:
+        pthread_mutex_t _mutex;
+};
 
 const int N = 5;
 
@@ -10,16 +51,16 @@ void incrementCounter(int &i)
 
 struct content {
     int a;
-    pthread_mutex_t mutex;
+    std::unique_ptr<IMutex> mutex;
 };
 
 void *thread_create(void *ptr)
 {
     struct content *content = (struct content *)ptr;
 
-    pthread_mutex_lock(&content->mutex);
+    content->mutex->lock();
     incrementCounter(content->a);
-    pthread_mutex_unlock(&content->mutex);
+    content->mutex->unlock();
     return NULL;
 }
 
@@ -29,17 +70,15 @@ int main(void)
     pthread_t threads[T];
     struct content content = {
         .a = 0,
-        .mutex = {},
+        .mutex = std::make_unique<Mutex>(),
     };
 
-    pthread_mutex_init(&content.mutex, NULL);
     for (unsigned int i = 0; i < T; i++) {
         pthread_create(&(threads[i]), NULL, thread_create, &content);
     }
     for (unsigned int i = 0; i < T; i++) {
         pthread_join(threads[i], NULL);
     }
-    pthread_mutex_destroy(&content.mutex);
 
     std::cout << content.a << std::endl;
     return 0;
