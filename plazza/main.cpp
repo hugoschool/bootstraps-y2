@@ -42,6 +42,22 @@ class Mutex : public IMutex {
         pthread_mutex_t _mutex;
 };
 
+class ScopedLock {
+    public:
+        ScopedLock() = delete;
+        ScopedLock(IMutex &mutex) : _mutex(mutex)
+        {
+            _mutex.lock();
+        }
+        ~ScopedLock()
+        {
+            _mutex.unlock();
+        }
+
+    private:
+        IMutex &_mutex;
+};
+
 const int N = 5;
 
 void incrementCounter(int &i)
@@ -57,10 +73,9 @@ struct content {
 void *thread_create(void *ptr)
 {
     struct content *content = (struct content *)ptr;
+    ScopedLock lock(*content->mutex);
 
-    content->mutex->lock();
     incrementCounter(content->a);
-    content->mutex->unlock();
     return NULL;
 }
 
