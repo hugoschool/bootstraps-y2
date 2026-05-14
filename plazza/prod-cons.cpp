@@ -15,12 +15,13 @@ class ISafeQueue {
         virtual int pop() = 0;
 };
 
+template<typename T>
 class SafeQueue : public ISafeQueue {
     public:
         SafeQueue() = default;
         ~SafeQueue() = default;
 
-        void push(int value) override
+        void push(T value) override
         {
             std::unique_lock lock(_mutex);
 
@@ -28,7 +29,7 @@ class SafeQueue : public ISafeQueue {
             _cv.notify_all();
         }
 
-        bool tryPop(int &value) override
+        bool tryPop(T &value) override
         {
             std::unique_lock lock(_mutex);
 
@@ -40,13 +41,13 @@ class SafeQueue : public ISafeQueue {
             return true;
         }
 
-        int pop() override
+        T pop() override
         {
             std::unique_lock lock(_mutex);
 
             _cv.wait(lock, [this]{ return !_queue.empty(); });
 
-            int value = _queue.front();
+            T value = _queue.front();
             _queue.pop();
             return value;
         }
@@ -55,7 +56,7 @@ class SafeQueue : public ISafeQueue {
         std::mutex _mutex;
         std::condition_variable _cv;
 
-        std::queue<int> _queue;
+        std::queue<T> _queue;
 };
 
 using namespace std::chrono_literals;
@@ -63,7 +64,7 @@ using namespace std::chrono_literals;
 class Consumer {
     public:
         Consumer() = delete;
-        Consumer(std::size_t i, SafeQueue &queue) : _queue(queue)
+        Consumer(std::size_t i, SafeQueue<int> &queue) : _queue(queue)
         {
             _thread = std::thread([this, i]() {
                 std::cerr << "Created consumer " << i << std::endl;
@@ -81,14 +82,14 @@ class Consumer {
         }
 
     private:
-        SafeQueue &_queue;
+        SafeQueue<int> &_queue;
         std::thread _thread;
 };
 
 class Producer {
     public:
         Producer() = delete;
-        Producer(std::size_t i, SafeQueue &queue) : _queue(queue)
+        Producer(std::size_t i, SafeQueue<int> &queue) : _queue(queue)
         {
             _thread = std::thread([this, i]() {
                 std::cerr << "Created producer " << i << std::endl;
@@ -106,7 +107,7 @@ class Producer {
         }
 
     private:
-        SafeQueue &_queue;
+        SafeQueue<int> &_queue;
         std::thread _thread;
 };
 
@@ -116,7 +117,7 @@ int main(void)
 
     const std::size_t consumerNb = 2;
     const std::size_t producerNb = 5;
-    SafeQueue queue;
+    SafeQueue<int> queue;
     std::unique_ptr<Consumer> consumers[consumerNb];
     std::unique_ptr<Producer> producers[producerNb];
 
