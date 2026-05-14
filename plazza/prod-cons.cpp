@@ -1,4 +1,5 @@
 #include <chrono>
+#include <condition_variable>
 #include <cstdlib>
 #include <memory>
 #include <mutex>
@@ -11,6 +12,7 @@ class ISafeQueue {
         virtual ~ISafeQueue() = default;
         virtual void push(int value) = 0;
         virtual bool tryPop(int &value) = 0;
+        virtual int pop() = 0;
 };
 
 class SafeQueue : public ISafeQueue {
@@ -23,6 +25,7 @@ class SafeQueue : public ISafeQueue {
             std::unique_lock lock(_mutex);
 
             _queue.push(value);
+            _cv.notify_all();
         }
 
         bool tryPop(int &value) override
@@ -37,8 +40,20 @@ class SafeQueue : public ISafeQueue {
             return true;
         }
 
+        int pop() override
+        {
+            std::unique_lock lock(_mutex);
+
+            _cv.wait(lock, [this]{ return !_queue.empty(); });
+
+            int value = _queue.front();
+            _queue.pop();
+            return value;
+        }
+
     private:
         std::mutex _mutex;
+        std::condition_variable _cv;
 
         std::queue<int> _queue;
 };
@@ -53,12 +68,8 @@ class Consumer {
             _thread = std::thread([this, i]() {
                 std::cerr << "Created consumer " << i << std::endl;
                 while (true) {
-                    int value;
-
-                    if (_queue.tryPop(value) == false)
-                        std::this_thread::sleep_for(5s);
-                    else
-                        std::cout << "Unstacked value by " << i << ": " << value << std::endl;
+                    int value = _queue.pop();
+                    std::cout << "Unstacked value by " << i << ": " << value << std::endl;
                 }
             });
         }
