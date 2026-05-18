@@ -1,0 +1,14 @@
+web:
+  hosts:
+    web-1:
+      ansible_user: root
+      ansible_host: 167.172.100.202
+    web-2:
+      ansible_user: root
+      ansible_host: 164.90.231.241
+
+redis:
+  hosts:
+    cache-1:
+      ansible_user: root
+      ansible_host: 209.38.255.2
