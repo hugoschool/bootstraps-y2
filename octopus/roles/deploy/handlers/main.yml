@@ -1,0 +1,5 @@
+- name: Restart application service
+  ansible.builtin.service:
+    name: my-awesome-app
+    enabled: yes
+    state: restarted

@@ -10,7 +10,7 @@
 
 - name: Copy application
   ansible.builtin.copy:
-    src: ./G-DOP-400_bootstrap_octopus_applications.zip
+    src: files/G-DOP-400_bootstrap_octopus_applications.zip
     dest: /app/G-DOP-400_bootstrap_octopus_applications.zip
 
 - name: Unzipping the application
@@ -23,17 +23,19 @@
   community.general.npm:
     path: /app/B-DOP-400_bootstrap_octopus_applications
 
+- name: Write config.json
+  ansible.builtin.template:
+      src: templates/config.json.j2
+      dest: /app/B-DOP-400_bootstrap_octopus_applications/config.json
+  notify:
+    - Restart application service
+
 - name: Copy systemd service
   ansible.builtin.copy:
-    src: ./my-awesome-app.service
+    src: files/my-awesome-app.service
     dest: /etc/systemd/system/my-awesome-app.service
 
-- name: Reload all systemd services
-  ansible.builtin.systemd_service:
-    daemon_reload: true
-
-- name: Enable and start application service
+- name: Enable application service
   ansible.builtin.service:
     name: my-awesome-app
     enabled: yes
-    state: started
