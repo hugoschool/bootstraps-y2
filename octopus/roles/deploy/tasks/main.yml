@@ -1,0 +1,39 @@
+- name: Remove previous app directory
+  ansible.builtin.file:
+    path: /app
+    state: absent
+
+- name: Create directory
+  ansible.builtin.file:
+    path: /app
+    state: directory
+
+- name: Copy application
+  ansible.builtin.copy:
+    src: ./G-DOP-400_bootstrap_octopus_applications.zip
+    dest: /app/G-DOP-400_bootstrap_octopus_applications.zip
+
+- name: Unzipping the application
+  ansible.builtin.unarchive:
+    src: /app/G-DOP-400_bootstrap_octopus_applications.zip
+    dest: /app
+    remote_src: yes
+
+- name: Install dependencies
+  community.general.npm:
+    path: /app/B-DOP-400_bootstrap_octopus_applications
+
+- name: Copy systemd service
+  ansible.builtin.copy:
+    src: ./my-awesome-app.service
+    dest: /etc/systemd/system/my-awesome-app.service
+
+- name: Reload all systemd services
+  ansible.builtin.systemd_service:
+    daemon_reload: true
+
+- name: Enable and start application service
+  ansible.builtin.service:
+    name: my-awesome-app
+    enabled: yes
+    state: started

@@ -1,0 +1,6 @@
+- name: Install NodeJS & NPM
+  ansible.builtin.apt:
+    pkg:
+      - nodejs
+      - npm
+    state: present

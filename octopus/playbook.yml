@@ -1,0 +1,16 @@
+---
+- hosts: all
+  roles:
+    - role: "roles/base"
+
+- hosts: web
+  roles:
+    - role: "roles/nodejs"
+
+- hosts: redis
+  roles:
+    - role: "roles/redis"
+
+- hosts: web
+  roles:
+    - role: "roles/deploy"

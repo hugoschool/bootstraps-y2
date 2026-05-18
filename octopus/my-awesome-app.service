@@ -1,0 +1,12 @@
+[Unit]
+Description=Start nodejs service
+After=network.target
+
+[Service]
+ExecStart=/usr/bin/npm start
+KillMode=control-group
+WorkingDirectory=/app/B-DOP-400_bootstrap_octopus_applications
+Restart=on-failure
+
+[Install]
+WantedBy=multi-user.target

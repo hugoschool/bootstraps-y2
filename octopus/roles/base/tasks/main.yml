@@ -1,0 +1,21 @@
+- name: Install essential packages
+  ansible.builtin.apt:
+    pkg:
+      - apt-transport-https
+      - ca-certificates
+      - git
+      - curl
+      - unzip
+      - zsh
+    state: present
+
+- name: Set timezone to Europe/Paris
+  become: true
+  community.general.timezone:
+    name: Europe/Paris
+
+- name: Change default shell to zsh
+  become: yes
+  user:
+    name: "{{ ansible_user }}"
+    shell: /usr/bin/zsh
